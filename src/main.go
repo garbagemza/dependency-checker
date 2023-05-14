@@ -32,6 +32,7 @@ import (
   "fmt"
   "log"
   "os"
+  "os/exec"
   "gopkg.in/yaml.v3"
 )
 
@@ -54,12 +55,44 @@ func main() {
 	}
 
 	var dependencies Dependencies
-
 	if err := yaml.Unmarshal(f, &dependencies); err != nil {
 		log.Fatal(err)
 	}
 
-	// Print out the new struct
-	fmt.Printf("%+v\n", dependencies)
+  createDirectory("./build")
+  getDependencies(dependencies.Dependencies)
+}
+
+func createDirectory(path string)  {
+  err := os.MkdirAll(path, os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func getDependencies(dependencies []Dependency) {
+  for _, d := range dependencies {
+    getDependency(d)
+  }
+}
+
+func getDependency(dependency Dependency)  {
+  fmt.Printf("%+v\n", dependency.Name)
+
+  cmd := exec.Command(
+    "git",
+    "clone",
+    "--branch",
+    dependency.Version,
+    "--depth",
+    "1",
+    dependency.Repository)
+
+  cmd.Dir = "./build"
+  out, err := cmd.CombinedOutput()
+  if err != nil {
+    fmt.Printf("%+v\n", string(out))
+    log.Fatal(err)
+  }
 }
 
