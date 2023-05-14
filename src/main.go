@@ -59,6 +59,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+  printGitVersion()
   createDirectory("./build")
   getDependencies(dependencies.Dependencies)
 }
@@ -74,6 +75,14 @@ func getDependencies(dependencies []Dependency) {
   for _, d := range dependencies {
     getDependency(d)
   }
+}
+
+func printGitVersion() {
+  cmd := exec.Command(
+    "git",
+    "--version")
+    out, _ := cmd.CombinedOutput()
+    fmt.Printf("%+v\n", string(out))
 }
 
 func getDependency(dependency Dependency)  {
