@@ -59,22 +59,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+  const workDirectory = "./build/dependencies"
+
   printGitVersion()
-  createDirectory("./build")
-  getDependencies(dependencies.Dependencies)
-}
-
-func createDirectory(path string)  {
-  err := os.MkdirAll(path, os.ModePerm)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func getDependencies(dependencies []Dependency) {
-  for _, d := range dependencies {
-    getDependency(d)
-  }
+  createDirectory(workDirectory)
+  fetchDependencies(dependencies.Dependencies, workDirectory)
 }
 
 func printGitVersion() {
@@ -85,7 +74,20 @@ func printGitVersion() {
     fmt.Printf("%+v\n", string(out))
 }
 
-func getDependency(dependency Dependency)  {
+func createDirectory(path string)  {
+  err := os.MkdirAll(path, os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func fetchDependencies(dependencies []Dependency, directory string) {
+  for _, d := range dependencies {
+    fetchDependency(d, directory)
+  }
+}
+
+func fetchDependency(dependency Dependency, directory string)  {
   fmt.Printf("%+v\n", dependency.Name)
 
   cmd := exec.Command(
@@ -97,7 +99,7 @@ func getDependency(dependency Dependency)  {
     "1",
     dependency.Repository)
 
-  cmd.Dir = "./build"
+  cmd.Dir = directory
   out, err := cmd.CombinedOutput()
   if err != nil {
     fmt.Printf("%+v\n", string(out))
