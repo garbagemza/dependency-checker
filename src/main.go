@@ -48,7 +48,6 @@ type Dependencies struct {
 }
 
 func main() {
-	// Load the file; returns []byte
 	f, err := os.ReadFile("build.yaml")
 	if err != nil {
 		log.Fatal(err)
