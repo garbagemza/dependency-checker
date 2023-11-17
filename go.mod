@@ -1,4 +1,4 @@
-module garbagemza/depcheck
+module garbagemza/cdcheck
 
 go 1.20
 
