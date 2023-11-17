@@ -38,9 +38,9 @@ import (
 
 type Dependency struct {
   Name       string
-	Type       string
+  Type       string
   Repository string
-	Version    string
+  Version    string
 }
 
 type Dependencies struct {
@@ -48,10 +48,10 @@ type Dependencies struct {
 }
 
 func main() {
-	f, err := os.ReadFile("build.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
+  f, err := os.ReadFile("build.yaml")
+  if err != nil {
+	  log.Fatal(err)
+  }
 
 	var dependencies Dependencies
 	if err := yaml.Unmarshal(f, &dependencies); err != nil {
